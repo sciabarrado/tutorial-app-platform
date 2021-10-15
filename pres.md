@@ -134,7 +134,6 @@ services:
   - path: /api
 ```
 
-
 ---
 # <!--!--> Exercise: backend 
 ```sh
@@ -143,6 +142,7 @@ cd ..
 cp conf/app-2.yaml .do/app.yaml
 # update
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
+echo $ID
 doctl app update $ID --spec .do/app.yaml
 ```
 
