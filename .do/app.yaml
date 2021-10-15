@@ -1,0 +1,10 @@
+name: tutorial-app-platform
+static_sites:
+- name: frontend
+  github:
+    repo: sciabarrado/tutorial-app-platform
+    branch: main
+    deploy_on_push: true
+  source_dir: frontend
+  routes:
+  - path: /
