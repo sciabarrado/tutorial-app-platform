@@ -92,9 +92,58 @@ doctl app logs $ID
 ```
 
 ---
-# <!--!--> Updating
+# Simple Backend Code
+
+```js
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+```
+
+---
+# <!--!--> Creating the backend
 ```sh
+mkdir backend ; cd backend
+npm -y init
+npm install --save express
+cp ../conf/index.js .
+node index.js
+```
+
+---
+# Backend deployment
+
+```yaml
+services:
+- name: backend
+  github:
+    repo: sciabarrado/tutorial-app-platform
+    branch: main
+    deploy_on_push: true
+  run_command: node index.js
+  source_dir: backend
+  routes:
+  - path: /api
+```
+
+
+---
+# <!--!--> Exercise: backend 
+```sh
+# new configuration
+cd ..
+cp conf/app-2.yaml .do/app.yaml
 # update
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
 doctl app update $ID --spec .do/app.yaml
 ```
+
+---
