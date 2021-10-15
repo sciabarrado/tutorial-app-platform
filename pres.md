@@ -57,16 +57,25 @@ https://www.digitalocean.com
 ![bg right 60% ](img/2-hello.png)
 
 ---
-# Deploy
+# Deployment: `.do/app.yaml`
 
 ```yaml
-%%conf/app-1.yaml%%
+name: tutorial-app-platform
+static_sites:
+- name: frontend
+  github:
+    repo: sciabarrado/tutorial-app-platform
+    branch: main
+    deploy_on_push: true
+  build_command: npm run build
+  source_dir: frontend
+  routes:
+  - path: /
 ```
+- Deploy with: `doctl app create --spec .do/app.yaml`
 
 ---
-
-# Exercise: frontend
-
+# <!--!--> Exercise: frontend
 ```sh
 # creating the frontend
 npx degit sveltejs/template frontend
@@ -75,7 +84,17 @@ npm run dev
 # deploying the frontend
 mkdir .do
 cp conf/app-1.yaml .do/app.yaml
-doctl app
+doctl app create --spec .do/app.yaml
+# monitoring
+ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
+echo $ID
+doctl app logs $ID
 ```
 
-
+---
+# <!--!--> Updating
+```sh
+# update
+ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
+doctl app update $ID --spec .do/app.yaml
+```

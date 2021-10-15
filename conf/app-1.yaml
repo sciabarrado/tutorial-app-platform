@@ -6,5 +6,6 @@ static_sites:
     branch: main
     deploy_on_push: true
   source_dir: frontend
+  build_command: npm run build
   routes:
   - path: /
