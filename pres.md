@@ -57,8 +57,11 @@ https://www.digitalocean.com
 ![bg right 60% ](img/2-hello.png)
 
 ---
-# Deploying the frontend
+# Deploy
 
+```yaml
+%%conf/app-1.yaml%%
+```
 
 ---
 
@@ -71,13 +74,8 @@ cd frontend && npm install
 npm run dev
 # deploying the frontend
 mkdir .do
-cp ../app-1.yaml .do/app.yaml
+cp conf/app-1.yaml .do/app.yaml
 doctl app
 ```
 
----
-# Deploy
-
-```
-```
 
