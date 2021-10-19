@@ -200,21 +200,40 @@ const res = await client.query(create)
 ```
 
 ---
-# Initializing the database
+# Connecting to the database
+
 ```js
 const { Client } = require('pg')
-const client = new Client()
 
+
+function start() {
+  console.log("connecting to database")
+  let client = new Client()
+  client.connect()
+    .then(() => init(client))
+    .catch((err) => {
+      console.log(err)
+      setTimeout(start, 2000)
+    })
+}
+```
+
+---
+# Initializing the database
+
+```js
 let create = `
 CREATE TABLE IF NOT EXISTS guestbook( 
    id SERIAL PRIMARY KEY,
-   message TEXT)`
+   message TEXT
+)`
 
-client.connect()
-.then(() => client.query(create))
-.then(() => app.listen(port))
-.then(() => console.log(`App listening at http://localhost:${port}`))
-.catch(console.log)
+function init(client) {
+  client.query(create)
+    .then(() => app.listen(port))
+    .then(() => console.log(`App listening a at ${port}`))
+    .catch(console.log)
+}
 ```
 
 ---
@@ -233,7 +252,7 @@ databases:
 ---
 ### Connecting to the database
 ```yaml
-  # add to backed service
+  # add parameters to connect to database
   envs:
     - name: PGHOST
       value: ${db.HOSTNAME}
@@ -253,10 +272,13 @@ databases:
 
 ---
 # <!--!--> Exercise: deployment database
-```
+```sh
 cp src/3-app.yaml .do/app.yaml 
 cp src/3-index.js backend/index.js
-
+# update
+ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
+echo $ID
+doctl app update $ID --spec .do/app.yaml
 ```
 
 ---

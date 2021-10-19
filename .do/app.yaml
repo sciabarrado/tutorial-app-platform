@@ -9,33 +9,33 @@ static_sites:
   build_command: npm run build
   routes:
   - path: /
-databases:
-- name: db
-  engine: PG
-  version: "12"
 services:
 - name: backend
-  envs:
-    - name: PGHOST
-      scope: RUN_TIME
-      value: ${db.HOSTNAME}
-    - name: PGPORT
-      scope: RUN_TIME
-      value: ${db.PORT}
-    - name: PGDATABASE
-      scope: RUN_TIME
-      value: ${db.DATABASE}
-    - name: PGUSER
-      scope: RUN_TIME
-      value: ${db.USERNAME}
-    - name: PGPASSWORD
-      scope: RUN_TIME
-      value: ${db.PASSWORD}
   github:
     repo: sciabarrado/tutorial-app-platform
     branch: main
     deploy_on_push: true
   run_command: node index.js
-  source_dir: backend
+  source_dir: backend 
+  envs:
+    - key: PGHOST
+      scope: RUN_TIME
+      value: ${db.HOSTNAME}
+    - key: PGPORT
+      scope: RUN_TIME
+      value: ${db.PORT}
+    - key: PGDATABASE
+      scope: RUN_TIME
+      value: ${db.DATABASE}
+    - key: PGUSER
+      scope: RUN_TIME
+      value: ${db.USERNAME}
+    - key: PGPASSWORD
+      scope: RUN_TIME
+      value: ${db.PASSWORD}
   routes:
   - path: /api
+databases:
+ - name: db
+   engine: PG
+   version: "12"
