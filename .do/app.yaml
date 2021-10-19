@@ -18,9 +18,6 @@ services:
   run_command: node index.js
   source_dir: backend 
   envs:
-    - key: DATABASE_URL
-      scope: RUN_TIME
-      value: ${db.DATABASE_URL}
     - key: PGHOST
       scope: RUN_TIME
       value: ${db.HOSTNAME}
@@ -36,6 +33,9 @@ services:
     - key: PGPASSWORD
       scope: RUN_TIME
       value: ${db.PASSWORD}
+    - key: PGSSLMODE
+      scope: RUN_TIME
+      value: "no-verify"
   routes:
   - path: /api
 databases:
