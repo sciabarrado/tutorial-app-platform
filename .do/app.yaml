@@ -9,6 +9,10 @@ static_sites:
   build_command: npm run build
   routes:
   - path: /
+databases:
+ - name: db
+   engine: PG
+   version: "12"
 services:
 - name: backend
   github:
@@ -18,6 +22,9 @@ services:
   run_command: node index.js
   source_dir: backend 
   envs:
+    - key: DATABASE_URL
+      scope: RUN_TIME
+      value: ${db.DATABASE_URL}
     - key: PGHOST
       scope: RUN_TIME
       value: ${db.HOSTNAME}
@@ -35,7 +42,3 @@ services:
       value: ${db.PASSWORD}
   routes:
   - path: /api
-databases:
- - name: db
-   engine: PG
-   version: "12"
