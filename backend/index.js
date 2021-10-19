@@ -22,6 +22,7 @@ function init(client) {
 }
 
 function start() {
+  console.log(process.env)
   console.log("connecting to database")
   let client = new Client()
   client.connect()
