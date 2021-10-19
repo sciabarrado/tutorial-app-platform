@@ -41,4 +41,4 @@ services:
 databases:
  - name: db
    engine: PG
-   version: "13"
+   version: "12"

@@ -24,10 +24,10 @@ function connect() {
       console.log("connected and initialized")
     })
     .catch((err) => {
+      console.log(process.env)
       console.log("cannot connect, retrying")
       setTimeout(connect, 2000)
     })
 }
 
-console.log(process.env)
 app.listen(port, () => connect())
