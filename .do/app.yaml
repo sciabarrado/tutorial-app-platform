@@ -9,10 +9,6 @@ static_sites:
   build_command: npm run build
   routes:
   - path: /
-databases:
- - name: db
-   engine: PG
-   version: "12"
 services:
 - name: backend
   github:
@@ -42,3 +38,7 @@ services:
       value: ${db.PASSWORD}
   routes:
   - path: /api
+databases:
+ - name: db
+   engine: PG
+   version: "13"

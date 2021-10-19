@@ -24,7 +24,7 @@ function connect() {
       console.log("connected and initialized")
     })
     .catch((err) => {
-      console.log(err)
+      console.log("cannot connect, retrying")
       setTimeout(connect, 2000)
     })
 }
