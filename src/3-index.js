@@ -7,6 +7,7 @@ app.get('/', (req, res) => {
 })
 
 const { Client } = require('pg')
+let client = undefined
 
 let create = `
 CREATE TABLE IF NOT EXISTS guestbook( 
@@ -14,22 +15,19 @@ CREATE TABLE IF NOT EXISTS guestbook(
    message TEXT
 )`
 
-function init(client) {
-  client.query(create)
-    .then(() => app.listen(port))
-    .then(() => console.log(`App listening at ${port}`))
-    .catch(console.log)
-}
-
-function start() {
+function connect() {
   console.log("connecting to database")
-  let client = new Client()
+  client = new Client()
   client.connect()
-    .then(() => init(client))
+    .then(() => {
+      client.query(create)
+      console.log("connected and initialized")
+    })
     .catch((err) => {
       console.log(err)
-      setTimeout(start, 2000)
+      console.log("cannot connect, retrying")
+      setTimeout(connect, 2000)
     })
 }
 
-start()
+app.listen(port, () => connect())

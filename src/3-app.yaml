@@ -26,13 +26,16 @@ services:
       value: ${db.PORT}
     - key: PGDATABASE
       scope: RUN_TIME
-      value: "localdb"
+      value: ${db.DATABASE}
     - key: PGUSER
       scope: RUN_TIME
       value: ${db.USERNAME}
     - key: PGPASSWORD
       scope: RUN_TIME
       value: ${db.PASSWORD}
+    - key: PGSSLMODE
+      scope: RUN_TIME
+      value: "no-verify"
   routes:
   - path: /api
 databases:
