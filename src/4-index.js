@@ -1,6 +1,10 @@
 const express = require('express')
+const cors = require("cors")
 const app = express()
 const port = 8080
+
+app.use(express.json())
+app.use(cors())
 
 const { Client } = require('pg')
 let client = undefined
@@ -12,7 +16,8 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', (req, res) => {
-  let msg = req.params.msg
+  console.log(req.body)
+  const msg = req.body.msg
   client.query("INSERT INTO guestbook(message) VALUES($1)", [msg])
   .then(r => res.send({ "changed": r.rowCount }))
 })
@@ -38,5 +43,4 @@ function connect() {
     })
 }
 
-app.use(express.urlencoded)
-app.listen(port, () => connect())
+app.listen(port, () => connect() )

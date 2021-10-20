@@ -1,20 +1,40 @@
 <script>
-	const url =
+	import { onMount } from "svelte";
+	const api =
 		location.hostname == "localhost" ? "http://localhost:8080/" : "/api/";
+
+	let data = [];
+	let msg = "";
+	function load() {
+		fetch(api)
+			.then((r) => r.json())
+			.then((d) => (data = d));
+	}
+	function save() {
+		let data = JSON.stringify({msg:msg})
+		msg = ""
+		console.log(api, data)
+		fetch(api, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: data,
+		}).then(load);
+	}
+	onMount(load);
 </script>
 
 <main>
 	<h1>Guest Book</h1>
-	{#await fetch(url).then((r) => r.json()) then data}
-		<ul>
-			{#each data as entry}
-				<li>{entry.message}</li>
-			{/each}
-		</ul>
-	{/await}
-	<form method="post" action={url}>
-		<input type="text" name="msg" />
-		<input type="submit" value="Submit" />
+	<ul>
+		{#each data as entry}
+			<li>{entry.message}</li>
+		{/each}
+	</ul>
+	<form>
+		<input type="text" name="msg" bind:value={msg} />
+		<button on:click|preventDefault={save}>Send</button>
 	</form>
 </main>
 
