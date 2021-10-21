@@ -5,6 +5,7 @@ _class: lead
 paginate: true
 backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.jpg')
+html: true
 ---
 
 ![bg left:40% 80%](./img/DO_Logo_Horizontal_Blue.png)
@@ -183,7 +184,7 @@ node index.js
 ```
 
 ---
-# Deploying the backed with `app.yaml``
+# Deploying the backed with `app.yaml`
 
 - Adding a `services` section
 - same steps as before:
@@ -214,7 +215,7 @@ services:
 ```
 
 ---
-# <!--!--> Exercise: backend 
+# <!--!--> Exercise: deploy backend 
 ```sh
 # new configuration
 cd ..
@@ -239,7 +240,7 @@ doctl app update $ID --spec .do/app.yaml
 - You need to use environment variables to connect to it
 
 ---
-# Environment variabiles used with PostgreSQL
+# Environment variables PostgreSQL
 
 - `PGHOST`, `PGPORT`
   - hostname and port of the database
@@ -247,7 +248,7 @@ doctl app update $ID --spec .do/app.yaml
   - username and password
 - `PGDATABASE`,  `PGSSLMODE`
   - database name
-  - *important* you may need to set SSL mode in certain cases
+  - *important* you may need  `PGSSLMODE=no-verify`
 
 
 ---
@@ -290,36 +291,41 @@ const res = await client.query(create)
 # Connecting to the database
 
 ```js
+// prereq
 const { Client } = require('pg')
-
-
-function start() {
-  console.log("connecting to database")
-  let client = new Client()
-  client.connect()
-    .then(() => init(client))
-    .catch((err) => {
-      console.log(err)
-      setTimeout(start, 2000)
-    })
-}
+let client = undefined
 ```
 
----
-# Initializing the database
-
 ```js
-let create = `
+// database table
+const createTable = `
 CREATE TABLE IF NOT EXISTS guestbook( 
    id SERIAL PRIMARY KEY,
    message TEXT
 )`
+```
 
-function init(client) {
-  client.query(create)
-    .then(() => app.listen(port))
-    .then(() => console.log(`App listening a at ${port}`))
-    .catch(console.log)
+```js
+app.listen(port, connectAndInitialize)
+```
+
+---
+
+```js
+// connect and initialize
+function connectAndInitialize() {
+  console.log("connecting to database")
+  client = new Client()
+  client.connect()
+    .then(() => {
+      client.query(createTable)
+      console.log("connected and initialized")
+    })
+    .catch((err) => {
+      console.log(err)
+      console.log("cannot connect, retrying")
+      setTimeout(connect, 2000)
+    })
 }
 ```
 
@@ -337,25 +343,23 @@ databases:
   - do not use in production
 
 ---
-### Connecting to the database
 ```yaml
-  # add parameters to connect to database
+  # environment variables for backend to connect to database
   envs:
     - name: PGHOST
       value: ${db.HOSTNAME}
     - name: PGPORT
-      scope: RUN_TIME
       value: ${db.PORT}
     - name: PGDATABASE
-      scope: RUN_TIME
       value: ${db.DATABASE}
     - name: PGUSER
-      scope: RUN_TIME
       value: ${db.USERNAME}
     - name: PGPASSWORD
-      scope: RUN_TIME
       value: ${db.PASSWORD}
+    - key: PGSSLMODE
+      value: "no-verify"
 ```
+## WARNING! omitted `scope: RUN_TIME`
 
 ---
 # <!--!--> Exercise: deployment database
@@ -372,3 +376,4 @@ doctl app update $ID --spec .do/app.yaml
 
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Guestbook)
 
+---
