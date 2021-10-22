@@ -9,3 +9,13 @@ static_sites:
   build_command: npm run build
   routes:
   - path: /
+services:
+- name: backend
+  github:
+    repo: sciabarrado/tutorial-app-platform
+    branch: main
+    deploy_on_push: true
+  run_command: node index.js
+  source_dir: backend
+  routes:
+  - path: /api

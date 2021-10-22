@@ -86,6 +86,8 @@ https://docs.digitalocean.com/reference/doctl/how-to/install/
 npx degit sveltejs/template frontend
 cd frontend && npm install 
 npm run dev
+# interrupt
+cd ..
 ```
 
 ---
@@ -134,14 +136,16 @@ static_sites:
 # <!--!--> Exercise: deploy frontend
 ```sh
 # deploying the frontend
-cd ..
 mkdir .do
 cp src/1-app.yaml .do/app.yaml
+git add frontend 
+git commit -m "frontend" -a
+git push origin main
 doctl app create --spec .do/app.yaml
 # monitoring
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
 echo $ID
-doctl app logs $ID
+doctl app logs $ID --type build
 ```
 
 ---
@@ -187,6 +191,8 @@ npm install --save express
 # using our examples here
 cp ../src/2-index.js index.js
 node index.js
+# interrupt
+cd ..
 ```
 
 ---
@@ -196,7 +202,7 @@ node index.js
 - same steps as before:
   - **1** pull
   - **2** build (automated)
-  - **3** expose to interned
+  - **3** expose to internet
 - Additional step:
   - **4** run your code
 
@@ -213,7 +219,7 @@ services:
     deploy_on_push: true
   source_dir: backend
   # 2 build is autodetected
-  # 3 expose to interned
+  # 3 expose to internet
   routes:
   - path: /api
   # 4 run your code
@@ -224,12 +230,12 @@ services:
 # <!--!--> Exercise: deploy backend 
 ```sh
 # new configuration
-cd ..
 cp src/2-app.yaml .do/app.yaml
 # update
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
 echo $ID
 doctl app update $ID --spec .do/app.yaml
+doctl app logs $ID --type=build
 ```
 
 ---
