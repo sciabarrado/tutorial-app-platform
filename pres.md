@@ -20,10 +20,10 @@ https://www.digitalocean.com
 ---
 # What we are going to do today?
 
-- Develop the **front-end**
-  - Deployed a static site
+- Develop a **front-end**
+  - Deployed in a static site
 - Implement a **back-end API**
-  - Provision a node backed
+  - Provisioned as backend service
 - Add persistence with a **database** 
   - Provisioning a Postgresql Databse
 - Develop freely with continuous updates!
@@ -46,7 +46,6 @@ https://docs.digitalocean.com/reference/doctl/how-to/install/
 
 - Available for Windows, Mac and Linux
 
-
 ---
 # Get your token
 
@@ -66,6 +65,7 @@ https://docs.digitalocean.com/reference/doctl/how-to/install/
 
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Frontend)
 
+
 ---
 # Creating a frontend
 
@@ -80,15 +80,24 @@ https://docs.digitalocean.com/reference/doctl/how-to/install/
 ![bg right 60% ](img/2-hello.png)
 
 ---
+# <!--!--> Exercise: create the frontend
+```sh
+# creating the frontend
+npx degit sveltejs/template frontend
+cd frontend && npm install 
+npm run dev
+```
+
+---
 # Concepts of App Platform / 1
 
-- You deployment is the `.do/app.yaml`
+- Your deployment is the `.do/app.yaml`
 - It includes lots of components:
-  - static sites
-  - applications in multiple languages
+  - **static sites**
+  - services 
   - databases
+  - routes
   - and much more...
-
 
 ---
 # Concepts of App Platform / 2
@@ -124,11 +133,8 @@ static_sites:
 ---
 # <!--!--> Exercise: deploy frontend
 ```sh
-# creating the frontend
-npx degit sveltejs/template frontend
-cd frontend && npm install 
-npm run dev
 # deploying the frontend
+cd ..
 mkdir .do
 cp src/1-app.yaml .do/app.yaml
 doctl app create --spec .do/app.yaml
@@ -294,9 +300,7 @@ const res = await client.query(create)
 // prereq
 const { Client } = require('pg')
 let client = undefined
-```
 
-```js
 // database table
 const createTable = `
 CREATE TABLE IF NOT EXISTS guestbook( 
@@ -306,8 +310,19 @@ CREATE TABLE IF NOT EXISTS guestbook(
 ```
 
 ```js
+// connectAndInitialize to be described
 app.listen(port, connectAndInitialize)
 ```
+---
+
+# Notes on connecting to the database
+
+- The database is available only when running the applicaton
+  - You need to initialize it when you start the application
+    - You may find useful "migration" libraries
+
+- The database may start after your application
+  - you need to waiting and retry until it is available
 
 ---
 
@@ -324,7 +339,7 @@ function connectAndInitialize() {
     .catch((err) => {
       console.log(err)
       console.log("cannot connect, retrying")
-      setTimeout(connect, 2000)
+      setTimeout(connectAndInitialize, 2000)
     })
 }
 ```
@@ -340,7 +355,9 @@ databases:
 ```
 
 - Development database
+  - Postgresql Only
   - do not use in production
+- You can provision a managed, redundant, backed up<br>**DBaaS** database separately
 
 ---
 ```yaml
@@ -367,8 +384,6 @@ databases:
 cp src/3-app.yaml .do/app.yaml 
 cp src/3-index.js backend/index.js
 # update
-ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
-echo $ID
 doctl app update $ID --spec .do/app.yaml
 ```
 
@@ -377,3 +392,106 @@ doctl app update $ID --spec .do/app.yaml
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Guestbook)
 
 ---
+
+# Backend code 
+
+```js
+app.get('/', (req, res) => {
+  client.query("SELECT id, message FROM guestbook ORDER BY id")
+  .then(r =>  res.send(r.rows))
+})
+
+app.post('/', (req, res) => {
+  const msg = req.body.msg
+  client.query("INSERT INTO guestbook(message) VALUES($1)", [msg])
+  .then(r => res.send({ "changed": r.rowCount }))
+})
+```
+
+---
+# <!--!--> Exercise: deploy and test it
+```sh
+# deploy
+cp src/4-index.js backend/index.js
+doctl app update $ID --spec .do/app.yaml
+# retrieve url
+URL=$(doctl app list | awk '/tutorial-app-platform/ { print $3}')
+echo $URL
+# test the api
+http $URL/api/
+http POST $URL/api "msg=hello world"
+http $URL/api/
+```
+
+---
+## Frontend Code 1/3: loading data
+```js
+const api = location.hostname == "localhost" ?
+   "http://localhost:8080/" : "/api/";
+
+let data = [];
+function load() {
+  fetch(api)
+    .then((r) => r.json())
+    .then((d) => (data = d));
+}
+
+import { onMount } from "svelte";
+onMount(load);
+```
+###  `GET /api/` in `data` 
+---
+## Frontend Code 2/3: rendering data
+
+```html
+<main>
+	<h1>Guest Book</h1>
+	<ul>
+		{#each data as entry}
+			<li>{entry.message}</li>
+		{/each}
+	</ul>
+	<form>
+		<input type="text" name="msg" bind:value={msg} />
+		<button on:click|preventDefault={save}>Send</button>
+	</form>
+</main>
+```
+### render `data` and form to store `msg`
+
+---
+## Frontend Code 3/3: saving data
+
+```js
+let msg = "";
+function save() {
+  let data = JSON.stringify({msg:msg})
+  msg = ""
+  fetch(api, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: data,
+  }).then(load);
+}
+```
+
+### `POST /api/` with form data then `load`
+
+---
+# <!--!--> Exercise: final deploy
+```sh
+# deploy
+cp src/4-App.svelte frontend/App.js
+doctl app update $ID --spec .do/app.yaml
+# retrieve url
+URL=$(doctl app list | awk '/tutorial-app-platform/ { print $3}')
+echo $URL
+```
+
+---
+
+![bg fit](./img/4-guestbook.png)
+
+

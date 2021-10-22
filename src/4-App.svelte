@@ -1,15 +1,19 @@
 <script>
-	import { onMount } from "svelte";
 	const api =
 		location.hostname == "localhost" ? "http://localhost:8080/" : "/api/";
 
 	let data = [];
-	let msg = "";
+	
 	function load() {
 		fetch(api)
 			.then((r) => r.json())
 			.then((d) => (data = d));
 	}
+
+	import { onMount } from "svelte";
+	onMount(load);
+
+	let msg = "";
 	function save() {
 		let data = JSON.stringify({msg:msg})
 		msg = ""
@@ -22,7 +26,6 @@
 			body: data,
 		}).then(load);
 	}
-	onMount(load);
 </script>
 
 <main>

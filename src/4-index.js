@@ -10,7 +10,6 @@ const { Client } = require('pg')
 let client = undefined
 
 app.get('/', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
   client.query("SELECT id, message FROM guestbook ORDER BY id")
   .then(r =>  res.send(r.rows))
 })
