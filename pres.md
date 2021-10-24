@@ -412,6 +412,10 @@ doctl app update $ID --spec .do/app.yaml
 
 ---
 
+![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=API)
+
+---
+
 # Backend code 
 
 ```js
@@ -446,6 +450,10 @@ http $URL/api/
 ```
 
 ---
+
+![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Client)
+
+---
 ## Frontend Code 1/3: loading data
 ```js
 const api = location.hostname == "localhost" ?
@@ -462,6 +470,7 @@ import { onMount } from "svelte";
 onMount(load);
 ```
 ###  `GET /api/` in `data` 
+
 ---
 ## Frontend Code 2/3: rendering data
 

@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS guestbook(
    message TEXT
 )`
 
-function connect() {
+function connectAndInitialize() {
   console.log("connecting to database")
   client = new Client()
   client.connect()
@@ -39,8 +39,8 @@ function connect() {
     .catch((err) => {
       console.log(err)
       console.log("cannot connect, retrying")
-      setTimeout(connect, 2000)
+      setTimeout(connectAndInitialize, 2000)
     })
 }
 
-app.listen(port, () => connect() )
+app.listen(port, () => connectAndInitialize() )
