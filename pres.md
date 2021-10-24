@@ -144,7 +144,8 @@ doctl app create --spec .do/app.yaml
 # monitoring
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
 echo $ID
-doctl app logs $ID --type build
+doctl app logs $ID --type build -f
+doctl app list
 ```
 
 ---
