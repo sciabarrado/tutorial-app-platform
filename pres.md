@@ -238,6 +238,8 @@ git push origin main
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
 echo $ID
 doctl app update $ID --spec .do/app.yaml
+doctl app logs $ID --type build -f
+doctl app list
 ```
 
 ---
@@ -289,7 +291,7 @@ psql -h $PGHOST -p $PGPORT -U $PGUSER $PGDATABASE
 # install driver
 cd backend
 npm install pg --save
-node
+node --experimental-repl-await
 # test database connection
 const { Client } = require('pg')
 const client = new Client()
