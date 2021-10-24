@@ -32,7 +32,6 @@ https://www.digitalocean.com
 
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Configuration)
 
-
 ---
 # Preparation
 
@@ -51,7 +50,7 @@ https://docs.digitalocean.com/reference/doctl/how-to/install/
 
 - Install the `doctl` cli
 - Click on **API** on Menu
-- Click on **Generate New Token**
+- Click onq **Generate New Token**
 - Click on **Generate Token**
 - Click on **Copy** 
 - Type `doctl auth init` and paste
@@ -231,11 +230,13 @@ services:
 ```sh
 # new configuration
 cp src/2-app.yaml .do/app.yaml
+git add backend
+git commit -m "backend" -a
+git push origin main
 # update
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
 echo $ID
 doctl app update $ID --spec .do/app.yaml
-doctl app logs $ID --type=build
 ```
 
 ---
@@ -297,6 +298,8 @@ CREATE TABLE IF NOT EXISTS guestbook(
    id SERIAL PRIMARY KEY,
    message TEXT)`
 const res = await client.query(create)
+# exit and check if the table is there
+psql -h $PGHOST -p $PGPORT -U $PGUSER $PGDATABASE -c '\dt'
 ```
 
 ---
