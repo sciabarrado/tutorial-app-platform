@@ -412,7 +412,7 @@ doctl app update $ID --spec .do/app.yaml
 
 ---
 
-![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=API)
+![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=API+Server)
 
 ---
 
@@ -451,7 +451,7 @@ http $URL/api/
 
 ---
 
-![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Client)
+![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=SPA+Client)
 
 ---
 ## Frontend Code 1/3: loading data
@@ -528,3 +528,8 @@ echo $URL
 ![bg fit](./img/4-guestbook.png)
 
 
+---
+
+![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Thank+You)
+
+Source code

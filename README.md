@@ -10,5 +10,5 @@ doctl add create --spec .do/app.yaml
 
 Slides in PDF are [here](pres.pdf).
 
-You can find also [here](pres) all slides split in multiple files and with examples in text format 
+You can find also [here](pres) all slides split in multiple files and with examples in text format. 
 
