@@ -58,12 +58,8 @@ https://docs.digitalocean.com/reference/doctl/how-to/install/
 ![bg right 110%](img/1-get-token.png)
 
 ---
-![bg fit](img/1-get-token-large.png)
-
----
 
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Frontend)
-
 
 ---
 # Creating a frontend
@@ -532,4 +528,5 @@ echo $URL
 
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Thank+You)
 
-Source code
+# Source code: bit.ly/msdo001
+
