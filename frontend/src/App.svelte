@@ -1,15 +1,48 @@
 <script>
-	export let name;
+	const api =
+		location.hostname == "localhost" ? "http://localhost:8080/" : "/api/";
+
+	let data = [];
+	
+	function load() {
+		fetch(api)
+			.then((r) => r.json())
+			.then((d) => (data = d));
+	}
+
+	import { onMount } from "svelte";
+	onMount(load);
+
+	let msg = "";
+	function save() {
+		let data = JSON.stringify({msg:msg})
+		msg = ""
+		console.log(api, data)
+		fetch(api, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: data,
+		}).then(load);
+	}
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<h1>Guest Book</h1>
+	<ul>
+		{#each data as entry}
+			<li>{entry.message}</li>
+		{/each}
+	</ul>
+	<form>
+		<input type="text" name="msg" bind:value={msg} />
+		<button on:click|preventDefault={save}>Send</button>
+	</form>
 </main>
 
 <style>
 	main {
-		text-align: center;
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
