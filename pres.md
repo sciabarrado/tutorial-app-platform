@@ -79,7 +79,8 @@ https://docs.digitalocean.com/reference/doctl/how-to/install/
 ```sh
 # creating the frontend
 npx degit sveltejs/template frontend
-cd frontend && npm install 
+cd frontend 
+npm install 
 npm run dev
 # interrupt
 cd ..
@@ -89,17 +90,18 @@ cd ..
 # Concepts of App Platform / 1
 
 - Your deployment is the `.do/app.yaml`
-- It includes lots of components:
-  - **static sites**
-  - services 
+- It includes lots of components
+- We are going to use
+  - static sites
+  - services
   - databases
   - routes
-  - and much more...
+- But wait: there is much more...
 
 ---
 # Concepts of App Platform / 2
 
-- The YAML describes the complete cycle:
+- The YAML describes the complete cycle to build and deploy:
  - **1** Pulling from repositoryes
  - **2** Building applications
  - **3** Exposing to the internet
@@ -137,12 +139,9 @@ git add frontend
 git commit -m "frontend" -a
 git push origin main
 doctl app create --spec .do/app.yaml
-# monitoring
-ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
-echo $ID
-doctl app logs $ID --type build -f
-doctl app list
 ```
+
+---
 
 ---
 
