@@ -401,7 +401,21 @@ git commit -m "database" -a
 git push origin main
 # update
 doctl app update $ID --spec .do/app.yaml
+# test the database
 ```
+
+---
+
+# Testing the database
+
+- Database access is restricted to you app
+
+  - you can expose publicly to access it
+
+  - not recommended to leave this way
+
+  - **remember to re-enable trusted sources**
+
 
 ---
 
@@ -412,11 +426,6 @@ doctl app update $ID --spec .do/app.yaml
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Guestbook)
 
 ---
-
-![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=API+Server)
-
----
-
 # Backend code 
 
 ```js
@@ -431,28 +440,6 @@ app.post('/', (req, res) => {
   .then(r => res.send({ "changed": r.rowCount }))
 })
 ```
-
----
-# <!--!--> Exercise: deploy and test it
-```sh
-# deploy
-cp src/4-index.js backend/index.js
-git add backend
-git commit -m "api" -a 
-git push origin main
-# check deploy first
-# retrieve url
-URL=$(doctl app list | awk '/tutorial-app-platform/ { print $3}')
-echo $URL
-# test the api using httpie
-http $URL/api/
-http POST $URL/api "msg=hello world"
-http $URL/api/
-```
-
----
-
-![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=SPA+Client)
 
 ---
 ## Frontend Code 1/3: loading data
@@ -523,6 +510,26 @@ git push origin main
 URL=$(doctl app list | awk '/tutorial-app-platform/ { print $3}')
 echo $URL
 ```
+
+---
+# <!--!--> Exercise: deploy and test it
+```sh
+# deploy
+cp src/4-index.js backend/index.js
+git add backend
+git commit -m "api" -a 
+git push origin main
+# check deploy first
+# retrieve url
+URL=$(doctl app list | awk '/tutorial-app-platform/ { print $3}')
+echo $URL
+# test the api using httpie
+http $URL/api/
+http POST $URL/api "msg=hello world"
+http $URL/api/
+```
+
+---
 
 ---
 
