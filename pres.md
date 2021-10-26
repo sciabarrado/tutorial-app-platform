@@ -236,8 +236,7 @@ git push origin main
 ID=$(doctl app list | awk '/tutorial-app-platform/ { print $1}')
 echo $ID
 doctl app update $ID --spec .do/app.yaml
-doctl app logs $ID --type build -f
-doctl app list
+# check deployment
 ```
 
 ---
@@ -246,15 +245,15 @@ doctl app list
 
 ---
 # What you need to know about the database
-- It is automated provisioned:
+- A development database can be automated provisioned:
   - just add it to the `app.yaml`
-- Available:
+- Available as DBaaS:
   - SQL: `postgresql`, `mysql`
   - NoSQL: `redis`, `mongodb`
 - You need to use environment variables to connect to it
 
 ---
-# Environment variables PostgreSQL
+# <!-- fit --> Environment variables for PostgreSQL
 
 - `PGHOST`, `PGPORT`
   - hostname and port of the database
@@ -262,7 +261,7 @@ doctl app list
   - username and password
 - `PGDATABASE`,  `PGSSLMODE`
   - database name
-  - *important* you may need  `PGSSLMODE=no-verify`
+  - **important** you may need  `PGSSLMODE=no-verify`
 
 
 ---
@@ -294,13 +293,13 @@ node --experimental-repl-await
 const { Client } = require('pg')
 const client = new Client()
 await client.connect()
-let create = `
-CREATE TABLE IF NOT EXISTS guestbook( 
-   id SERIAL PRIMARY KEY,
-   message TEXT)`
+let create = `CREATE TABLE IF NOT EXISTS 
+  guestbook( id SERIAL PRIMARY KEY,
+             message TEXT)`
 const res = await client.query(create)
 # exit and check if the table is there
-psql -h $PGHOST -p $PGPORT -U $PGUSER $PGDATABASE -c '\dt'
+psql -h $PGHOST -p $PGPORT -U $PGUSER $PGDATABASE 
+\dt
 ```
 
 ---
@@ -329,7 +328,9 @@ app.listen(port, connectAndInitialize)
 
 - The database is available only when running the applicaton
   - You need to initialize it when you start the application
-    - You may find useful "migration" libraries
+    - Better is to use:
+      - managed database
+      - migration libraries
 
 - The database may start after your application
   - you need to waiting and retry until it is available
