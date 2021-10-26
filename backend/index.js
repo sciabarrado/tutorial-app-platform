@@ -6,6 +6,28 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`)
-})
+const { Client } = require('pg')
+let client = undefined
+
+let create = `
+CREATE TABLE IF NOT EXISTS guestbook( 
+   id SERIAL PRIMARY KEY,
+   message TEXT
+)`
+
+function connectAndInitialize() {
+  console.log("connecting to database")
+  client = new Client()
+  client.connect()
+    .then(() => {
+      client.query(create)
+      console.log("connected and initialized")
+    })
+    .catch((err) => {
+      console.log(err)
+      console.log("cannot connect, retrying")
+      setTimeout(connectAndInitialize, 2000)
+    })
+}
+
+app.listen(port, connectAndInitialize)

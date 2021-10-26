@@ -336,7 +336,7 @@ app.listen(port, connectAndInitialize)
   - you need to waiting and retry until it is available
 
 ---
-
+# `connectAndInitalize`
 ```js
 // connect and initialize
 function connectAndInitialize() {
@@ -371,10 +371,13 @@ databases:
 - You can provision a managed, redundant, backed up<br>**DBaaS** database separately
 
 ---
+## Environment variables for backend
+
 ```yaml
-  # environment variables for backend to connect to database
+  # add this to backend service
   envs:
     - name: PGHOST
+      scope: RUN_TIME # omitted below to fit in the slide
       value: ${db.HOSTNAME}
     - name: PGPORT
       value: ${db.PORT}
@@ -387,7 +390,6 @@ databases:
     - key: PGSSLMODE
       value: "no-verify"
 ```
-## WARNING! omitted `scope: RUN_TIME`
 
 ---
 # <!--!--> Exercise: deployment database
