@@ -416,7 +416,6 @@ doctl app update $ID --spec .do/app.yaml
 
   - **remember to re-enable trusted sources**
 
-
 ---
 
 ![bg fit](img/3-database.png)
@@ -501,35 +500,16 @@ function save() {
 ---
 # <!--!--> Exercise: final deploy
 ```sh
-# deploy
-cp src/4-App.svelte frontend/src/App.svelte
-git add frontend
-git commit -m "client" -a
-git push origin main
-# retrieve url
-URL=$(doctl app list | awk '/tutorial-app-platform/ { print $3}')
-echo $URL
-```
+## Enable trusted sources before this
 
----
-# <!--!--> Exercise: deploy and test it
-```sh
 # deploy
 cp src/4-index.js backend/index.js
-git add backend
-git commit -m "api" -a 
+cp src/4-App.svelte frontend/src/App.svelte
+git add frontend backend
+git commit -m "guestbook" -a
 git push origin main
-# check deploy first
-# retrieve url
-URL=$(doctl app list | awk '/tutorial-app-platform/ { print $3}')
-echo $URL
-# test the api using httpie
-http $URL/api/
-http POST $URL/api "msg=hello world"
-http $URL/api/
+# wait for the final build
 ```
-
----
 
 ---
 
@@ -541,4 +521,3 @@ http $URL/api/
 ![bg fit](https://fakeimg.pl/1600x900/000000,00/000/?text=Thank+You)
 
 # Source code: bit.ly/msdo001
-
