@@ -139,9 +139,12 @@ git add frontend
 git commit -m "frontend" -a
 git push origin main
 doctl app create --spec .do/app.yaml
+# check build logs
 ```
 
 ---
+
+![bg fit](./img/2-build.png)
 
 ---
 
