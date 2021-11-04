@@ -102,7 +102,7 @@ cd ..
 # Concepts of App Platform / 2
 
 - The YAML describes the complete cycle to build and deploy:
- - **1** Pulling from repositoryes
+ - **1** Pulling from repositories
  - **2** Building applications
  - **3** Exposing to the internet
 
